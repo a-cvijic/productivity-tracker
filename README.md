@@ -64,7 +64,7 @@ npm start
 ![Tasks Page](screenshots/tasks.png)
 ![Calendar Page](screenshots/calendar.png)
 ![Analytics Page](screenshots/analytics.png)
-![Analytics Page2](screenshots/analytics.png)
+![Analytics Page2](screenshots/analytics2.png)
 
 ---
 
