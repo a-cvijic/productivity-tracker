@@ -4,7 +4,7 @@ import TaskForm from "./TaskForm";
 import FilterBar from "./FilterBar";
 import ActiveTimer from "./ActiveTimer";
 import TaskCard from "./TaskCard";
-import { formatTime, categories } from "../utils/helpers";
+import { formatTime } from "../utils/helpers";
 
 const TasksPage = ({
   tasks,
@@ -23,6 +23,9 @@ const TasksPage = ({
   const [newCategory, setNewCategory] = useState("Work");
   const [newPriority, setNewPriority] = useState("Medium");
   const [newEstimate, setNewEstimate] = useState("");
+  const [newDueDate, setNewDueDate] = useState("");
+  const [newNotes, setNewNotes] = useState("");
+  const [newTags, setNewTags] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
   const [filterPriority, setFilterPriority] = useState("All");
   const [sortBy, setSortBy] = useState("date");
@@ -34,9 +37,21 @@ const TasksPage = ({
         category: newCategory,
         priority: newPriority,
         estimate: newEstimate ? parseInt(newEstimate) * 60 : 0,
+        dueDate: newDueDate || null,
+        notes: newNotes || null,
+        tags: newTags
+          ? newTags
+              .split(",")
+              .map((t) => t.trim())
+              .filter((t) => t)
+          : [],
       });
+      // Reset form
       setNewTask("");
       setNewEstimate("");
+      setNewDueDate("");
+      setNewNotes("");
+      setNewTags("");
       setShowAddForm(false);
     }
   };
@@ -52,6 +67,11 @@ const TasksPage = ({
         return priorityOrder[b.priority] - priorityOrder[a.priority];
       }
       if (sortBy === "time") return b.time - a.time;
+      if (sortBy === "dueDate") {
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      }
       return 0;
     });
 
@@ -60,6 +80,9 @@ const TasksPage = ({
   const activeTime = tasks
     .filter((t) => !t.completed)
     .reduce((acc, t) => acc + t.time, 0);
+  const overdueTasks = tasks.filter(
+    (t) => t.dueDate && new Date(t.dueDate) < new Date() && !t.completed
+  ).length;
 
   return (
     <>
@@ -67,7 +90,7 @@ const TasksPage = ({
       {showStats && (
         <div className="mb-8 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Stats</h2>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-5 gap-4">
             <div className="text-center p-4 bg-white rounded-lg shadow-sm">
               <p className="text-gray-600 text-sm font-medium">Total Tasks</p>
               <p className="text-3xl font-bold text-indigo-600">
@@ -79,6 +102,10 @@ const TasksPage = ({
               <p className="text-3xl font-bold text-green-600">
                 {completedTasks}
               </p>
+            </div>
+            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+              <p className="text-gray-600 text-sm font-medium">Overdue</p>
+              <p className="text-3xl font-bold text-red-600">{overdueTasks}</p>
             </div>
             <div className="text-center p-4 bg-white rounded-lg shadow-sm">
               <p className="text-gray-600 text-sm font-medium">Active Time</p>
@@ -108,6 +135,12 @@ const TasksPage = ({
         setNewPriority={setNewPriority}
         newEstimate={newEstimate}
         setNewEstimate={setNewEstimate}
+        newDueDate={newDueDate}
+        setNewDueDate={setNewDueDate}
+        newNotes={newNotes}
+        setNewNotes={setNewNotes}
+        newTags={newTags}
+        setNewTags={setNewTags}
         addTask={handleAddTask}
       />
 

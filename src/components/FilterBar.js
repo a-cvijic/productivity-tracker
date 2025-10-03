@@ -65,6 +65,7 @@ const FilterBar = ({
             <option value="date">Date Added</option>
             <option value="priority">Priority</option>
             <option value="time">Time Spent</option>
+            <option value="dueDate">Due Date</option>
           </select>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Calendar, FileText, Tag as TagIcon } from "lucide-react";
 import { categories, priorities } from "../utils/helpers";
 
 const TaskForm = ({
@@ -13,6 +13,12 @@ const TaskForm = ({
   setNewPriority,
   newEstimate,
   setNewEstimate,
+  newDueDate,
+  setNewDueDate,
+  newNotes,
+  setNewNotes,
+  newTags,
+  setNewTags,
   addTask,
 }) => {
   if (!showAddForm) {
@@ -40,6 +46,7 @@ const TaskForm = ({
       </div>
 
       <div className="space-y-4">
+        {/* Task Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Task Name *
@@ -53,6 +60,7 @@ const TaskForm = ({
           />
         </div>
 
+        {/* Category, Priority, Estimate */}
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -100,6 +108,50 @@ const TaskForm = ({
               className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
+        </div>
+
+        {/* Due Date */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            Due Date
+          </label>
+          <input
+            type="date"
+            value={newDueDate}
+            onChange={(e) => setNewDueDate(e.target.value)}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 transition"
+          />
+        </div>
+
+        {/* Tags */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+            <TagIcon className="w-4 h-4" />
+            Tags (comma separated)
+          </label>
+          <input
+            type="text"
+            value={newTags}
+            onChange={(e) => setNewTags(e.target.value)}
+            placeholder="e.g. urgent, client, meeting"
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 transition"
+          />
+        </div>
+
+        {/* Notes */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+            <FileText className="w-4 h-4" />
+            Notes
+          </label>
+          <textarea
+            value={newNotes}
+            onChange={(e) => setNewNotes(e.target.value)}
+            placeholder="Add any additional notes or details..."
+            rows="3"
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 transition resize-none"
+          />
         </div>
 
         <button
