@@ -8,19 +8,57 @@ import SettingsPage from "./components/SettingsPage";
 import ExportModal from "./components/ExportModal";
 
 function App() {
-  // State management
-  const [tasks, setTasks] = useState([]);
-  const [activeTaskId, setActiveTaskId] = useState(null);
-  const [time, setTime] = useState(0);
+  // Load initial state from localStorage or use defaults
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("productivityTasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+
+  const [activeTaskId, setActiveTaskId] = useState(() => {
+    const savedActiveTask = localStorage.getItem("activeTaskId");
+    return savedActiveTask ? JSON.parse(savedActiveTask) : null;
+  });
+
+  const [time, setTime] = useState(() => {
+    const savedTime = localStorage.getItem("currentTime");
+    return savedTime ? JSON.parse(savedTime) : 0;
+  });
+
   const [currentPage, setCurrentPage] = useState("tasks");
   const [showStats, setShowStats] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
-  const [settings, setSettings] = useState({
-    theme: "default",
-    soundEnabled: true,
-    autoStart: false,
-    dailyGoal: 240,
+
+  const [settings, setSettings] = useState(() => {
+    const savedSettings = localStorage.getItem("appSettings");
+    return savedSettings
+      ? JSON.parse(savedSettings)
+      : {
+          theme: "default",
+          soundEnabled: true,
+          autoStart: false,
+          dailyGoal: 240,
+        };
   });
+
+  // Save tasks to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("productivityTasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  // Save activeTaskId to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("activeTaskId", JSON.stringify(activeTaskId));
+  }, [activeTaskId]);
+
+  // Save time to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("currentTime", JSON.stringify(time));
+  }, [time]);
+
+  // Save settings to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("appSettings", JSON.stringify(settings));
+  }, [settings]);
 
   // Timer effect
   useEffect(() => {
