@@ -47,7 +47,7 @@ src/
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/productivity-tracker.git
+git clone https://github.com/a-cvijic/productivity-tracker.git
 cd productivity-tracker
 
 # Install dependencies
