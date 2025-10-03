@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Clock, BarChart3 } from "lucide-react";
 import Navigation from "./components/Navigation";
 import TasksPage from "./components/TasksPage";
+import CalendarView from "./components/CalendarView";
 import AnalyticsPage from "./components/AnalyticsPage";
 import SettingsPage from "./components/SettingsPage";
+import ExportModal from "./components/ExportModal";
 
 function App() {
   // State management
@@ -12,6 +14,7 @@ function App() {
   const [time, setTime] = useState(0);
   const [currentPage, setCurrentPage] = useState("tasks");
   const [showStats, setShowStats] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [settings, setSettings] = useState({
     theme: "default",
     soundEnabled: true,
@@ -112,6 +115,7 @@ function App() {
           <Navigation
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
+            onExportClick={() => setShowExportModal(true)}
           />
 
           {/* Page Content */}
@@ -130,6 +134,8 @@ function App() {
             />
           )}
 
+          {currentPage === "calendar" && <CalendarView tasks={tasks} />}
+
           {currentPage === "analytics" && (
             <AnalyticsPage tasks={tasks} settings={settings} />
           )}
@@ -146,6 +152,13 @@ function App() {
           )}
         </div>
       </div>
+
+      {/* Export Modal */}
+      <ExportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        tasks={tasks}
+      />
     </div>
   );
 }
