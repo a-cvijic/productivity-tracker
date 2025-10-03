@@ -33,11 +33,13 @@ Settings allow theme customization and goal adjustments.
 
 ## 📂 Project Structure
 
+```bash
 src/
-├── components/ # TaskCard, TaskForm, FilterBar, Stats, etc.
-├── pages/ # TasksPage, AnalyticsPage, SettingsPage, CalendarPage
-├── App.js # Main app with routing
-└── index.js # Entry point
+├── components/   # TaskCard, TaskForm, FilterBar, Stats, etc.
+├── pages/        # TasksPage, AnalyticsPage, SettingsPage, CalendarPage
+├── App.js        # Main app with routing
+└── index.js      # Entry point
+```
 
 ---
 
