@@ -6,6 +6,7 @@ import CalendarView from "./components/CalendarView";
 import AnalyticsPage from "./components/AnalyticsPage";
 import SettingsPage from "./components/SettingsPage";
 import ExportModal from "./components/ExportModal";
+import HelpPage from "./components/HelpPage";
 
 function App() {
   // Load initial state from localStorage or use defaults
@@ -40,27 +41,24 @@ function App() {
         };
   });
 
-  // Save tasks to localStorage whenever they change
+  // Persist data in localStorage
   useEffect(() => {
     localStorage.setItem("productivityTasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  // Save activeTaskId to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("activeTaskId", JSON.stringify(activeTaskId));
   }, [activeTaskId]);
 
-  // Save time to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("currentTime", JSON.stringify(time));
   }, [time]);
 
-  // Save settings to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("appSettings", JSON.stringify(settings));
   }, [settings]);
 
-  // Timer effect
+  // Timer
   useEffect(() => {
     let interval;
     if (activeTaskId !== null) {
@@ -71,7 +69,7 @@ function App() {
     return () => clearInterval(interval);
   }, [activeTaskId]);
 
-  // Task management functions
+  // Task functions
   const addTask = (taskData) => {
     setTasks([
       ...tasks,
@@ -188,6 +186,8 @@ function App() {
               setTime={setTime}
             />
           )}
+
+          {currentPage === "help" && <HelpPage />}
         </div>
       </div>
 
