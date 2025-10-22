@@ -1,4 +1,3 @@
-// src/components/HelpPage.js
 import React from "react";
 import { HelpCircle } from "lucide-react";
 

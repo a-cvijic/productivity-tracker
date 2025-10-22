@@ -1,4 +1,3 @@
-// src/components/Navigation.js
 import React from "react";
 import {
   Home,
@@ -26,7 +25,13 @@ const Navigation = ({ currentPage, setCurrentPage, onExportClick }) => {
         return (
           <button
             key={item.id}
-            onClick={() => setCurrentPage(item.id)}
+            onClick={() => {
+              if (item.id === "export") {
+                onExportClick();
+              } else {
+                setCurrentPage(item.id);
+              }
+            }}
             className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition font-medium ${
               currentPage === item.id
                 ? "bg-white text-indigo-600 shadow-sm"
