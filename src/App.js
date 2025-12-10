@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Clock, BarChart3 } from "lucide-react";
 import Navigation from "./components/Navigation";
 import TasksPage from "./components/TasksPage";
+import TasksPageB from "./components/TasksPageB";
 import CalendarView from "./components/CalendarView";
 import AnalyticsPage from "./components/AnalyticsPage";
 import SettingsPage from "./components/SettingsPage";
 import ExportModal from "./components/ExportModal";
+import ExportModalB from "./components/ExportModalB";
 import HelpPage from "./components/HelpPage";
 
 function App() {
@@ -28,6 +30,13 @@ function App() {
   const [currentPage, setCurrentPage] = useState("tasks");
   const [showStats, setShowStats] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+
+  // A/B Test variant detection from URL
+  // Use ?variant=b or ?v=b to access variant B
+  const [isVariantB, setIsVariantB] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('variant') === 'b' || params.get('v') === 'b';
+  });
 
   const [settings, setSettings] = useState(() => {
     const savedSettings = localStorage.getItem("appSettings");
@@ -135,16 +144,46 @@ function App() {
               <h1 className="text-3xl font-bold text-gray-800">
                 Productivity Tracker
               </h1>
+              {/* A/B Test Indicator */}
+              {isVariantB && (
+                <span className="px-2 py-1 text-xs font-bold bg-green-100 text-green-700 rounded-full">
+                  Variant B
+                </span>
+              )}
             </div>
-            {currentPage === "tasks" && (
+            <div className="flex items-center gap-2">
+              {currentPage === "tasks" && (
+                <button
+                  onClick={() => setShowStats(!showStats)}
+                  className="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition"
+                >
+                  <BarChart3 className="w-5 h-5" />
+                  {showStats ? "Hide Stats" : "Quick Stats"}
+                </button>
+              )}
+              {/* A/B Toggle Button */}
               <button
-                onClick={() => setShowStats(!showStats)}
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition"
+                onClick={() => {
+                  const newVariant = !isVariantB;
+                  setIsVariantB(newVariant);
+                  const url = new URL(window.location.href);
+                  if (newVariant) {
+                    url.searchParams.set('v', 'b');
+                  } else {
+                    url.searchParams.delete('v');
+                    url.searchParams.delete('variant');
+                  }
+                  window.history.replaceState({}, '', url);
+                }}
+                className={`px-3 py-2 text-sm font-medium rounded-lg transition ${
+                  isVariantB
+                    ? 'bg-green-600 text-white hover:bg-green-700'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
               >
-                <BarChart3 className="w-5 h-5" />
-                {showStats ? "Hide Stats" : "Quick Stats"}
+                {isVariantB ? 'Version B' : 'Version A'}
               </button>
-            )}
+            </div>
           </div>
 
           {/* Navigation */}
@@ -155,8 +194,23 @@ function App() {
           />
 
           {/* Page Content */}
-          {currentPage === "tasks" && (
+          {currentPage === "tasks" && !isVariantB && (
             <TasksPage
+              tasks={tasks}
+              addTask={addTask}
+              startTask={startTask}
+              pauseTask={pauseTask}
+              completeTask={completeTask}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+              activeTaskId={activeTaskId}
+              time={time}
+              showStats={showStats}
+            />
+          )}
+
+          {currentPage === "tasks" && isVariantB && (
+            <TasksPageB
               tasks={tasks}
               addTask={addTask}
               startTask={startTask}
@@ -191,12 +245,21 @@ function App() {
         </div>
       </div>
 
-      {/* Export Modal */}
-      <ExportModal
-        isOpen={showExportModal}
-        onClose={() => setShowExportModal(false)}
-        tasks={tasks}
-      />
+      {/* Export Modal - A/B variants */}
+      {!isVariantB && (
+        <ExportModal
+          isOpen={showExportModal}
+          onClose={() => setShowExportModal(false)}
+          tasks={tasks}
+        />
+      )}
+      {isVariantB && (
+        <ExportModalB
+          isOpen={showExportModal}
+          onClose={() => setShowExportModal(false)}
+          tasks={tasks}
+        />
+      )}
     </div>
   );
 }
