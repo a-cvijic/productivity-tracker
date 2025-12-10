@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 import TaskForm from "./TaskForm";
 import FilterBar from "./FilterBar";
@@ -30,6 +30,17 @@ const TasksPage = ({
   const [filterPriority, setFilterPriority] = useState("All");
   const [sortBy, setSortBy] = useState("date");
 
+  // Browsee: Track page view for variant A
+  useEffect(() => {
+    window._browsee?.('event', 'view_tasks_page', { variant: 'A' });
+  }, []);
+
+  // Browsee: Track when add form is opened
+  const handleOpenAddForm = () => {
+    window._browsee?.('event', 'open_add_task_form', { variant: 'A' });
+    setShowAddForm(true);
+  };
+
   const handleAddTask = () => {
     if (newTask.trim()) {
       addTask({
@@ -46,6 +57,8 @@ const TasksPage = ({
               .filter((t) => t)
           : [],
       });
+      // Browsee: Track task creation
+      window._browsee?.('event', 'create_task', { variant: 'A' });
       // Reset form
       setNewTask("");
       setNewEstimate("");
@@ -126,7 +139,7 @@ const TasksPage = ({
       {/* Task Form */}
       <TaskForm
         showAddForm={showAddForm}
-        setShowAddForm={setShowAddForm}
+        setShowAddForm={handleOpenAddForm}
         newTask={newTask}
         setNewTask={setNewTask}
         newCategory={newCategory}

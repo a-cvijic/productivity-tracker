@@ -181,7 +181,15 @@ const TaskCard = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4 flex-1">
               <button
-                onClick={() => completeTask(task.id)}
+                onClick={() => {
+                  // Browsee: Track task completion
+                  if (!task.completed) {
+                    const params = new URLSearchParams(window.location.search);
+                    const variant = (params.get('variant') === 'b' || params.get('v') === 'b') ? 'B' : 'A';
+                    window._browsee?.('event', 'complete_task', { variant });
+                  }
+                  completeTask(task.id);
+                }}
                 className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition flex-shrink-0 ${
                   task.completed
                     ? "bg-green-500 border-green-500"

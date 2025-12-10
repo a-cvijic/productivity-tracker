@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   X,
   Download,
@@ -35,6 +35,13 @@ const ExportModalB = ({ isOpen, onClose, tasks }) => {
 
   // Auto-generated filename
   const autoFilename = `productivity-tracker-${new Date().toISOString().split("T")[0]}`;
+
+  // Browsee: Track when export modal is opened
+  useEffect(() => {
+    if (isOpen) {
+      window._browsee?.('event', 'open_export_modal', { variant: 'B' });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -190,6 +197,9 @@ const ExportModalB = ({ isOpen, onClose, tasks }) => {
     if (exportFormat === "json") exportToJSON();
     if (exportFormat === "txt") exportToTXT();
     if (exportFormat === "pdf") exportToPDF();
+
+    // Browsee: Track successful export
+    window._browsee?.('event', 'complete_export', { variant: 'B', format: exportFormat });
 
     setStep(3);
     setTimeout(() => {

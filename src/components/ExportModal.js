@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   X,
   Download,
@@ -15,6 +15,13 @@ const ExportModal = ({ isOpen, onClose, tasks }) => {
   const [includeTime, setIncludeTime] = useState(true);
   const [includeNotes, setIncludeNotes] = useState(true);
   const [step, setStep] = useState(1); // Multi-step process
+
+  // Browsee: Track when export modal is opened
+  useEffect(() => {
+    if (isOpen) {
+      window._browsee?.('event', 'open_export_modal', { variant: 'A' });
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -187,6 +194,9 @@ const ExportModal = ({ isOpen, onClose, tasks }) => {
     if (exportFormat === "json") exportToJSON();
     if (exportFormat === "txt") exportToTXT();
     if (exportFormat === "pdf") exportToPDF();
+
+    // Browsee: Track successful export
+    window._browsee?.('event', 'complete_export', { variant: 'A', format: exportFormat });
 
     setStep(3); // Show success step
     setTimeout(() => {
