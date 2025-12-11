@@ -186,7 +186,7 @@ const TaskCard = ({
                   if (!task.completed) {
                     const params = new URLSearchParams(window.location.search);
                     const variant = (params.get('variant') === 'b' || params.get('v') === 'b') ? 'B' : 'A';
-                    window._browsee?.('event', 'complete_task', { variant });
+                    window._browsee?.('logEvent', 'complete_task', { variant });
                   }
                   completeTask(task.id);
                 }}

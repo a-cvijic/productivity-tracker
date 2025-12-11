@@ -19,7 +19,7 @@ const ExportModal = ({ isOpen, onClose, tasks }) => {
   // Browsee: Track when export modal is opened
   useEffect(() => {
     if (isOpen) {
-      window._browsee?.('event', 'open_export_modal', { variant: 'A' });
+      window._browsee?.('logEvent', 'open_export_modal', { variant: 'A' });
     }
   }, [isOpen]);
 
@@ -196,7 +196,7 @@ const ExportModal = ({ isOpen, onClose, tasks }) => {
     if (exportFormat === "pdf") exportToPDF();
 
     // Browsee: Track successful export
-    window._browsee?.('event', 'complete_export', { variant: 'A', format: exportFormat });
+    window._browsee?.('logEvent', 'complete_export', { variant: 'A', format: exportFormat });
 
     setStep(3); // Show success step
     setTimeout(() => {

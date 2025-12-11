@@ -32,12 +32,12 @@ const TasksPage = ({
 
   // Browsee: Track page view for variant A
   useEffect(() => {
-    window._browsee?.('event', 'view_tasks_page', { variant: 'A' });
+    window._browsee?.('logEvent', 'view_tasks_page', { variant: 'A' });
   }, []);
 
   // Browsee: Track when add form is opened
   const handleOpenAddForm = () => {
-    window._browsee?.('event', 'open_add_task_form', { variant: 'A' });
+    window._browsee?.('logEvent', 'open_add_task_form', { variant: 'A' });
     setShowAddForm(true);
   };
 
@@ -58,7 +58,7 @@ const TasksPage = ({
           : [],
       });
       // Browsee: Track task creation
-      window._browsee?.('event', 'create_task', { variant: 'A' });
+      window._browsee?.('logEvent', 'create_task', { variant: 'A' });
       // Reset form
       setNewTask("");
       setNewEstimate("");
